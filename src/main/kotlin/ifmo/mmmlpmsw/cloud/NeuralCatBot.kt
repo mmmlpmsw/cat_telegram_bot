@@ -1,9 +1,9 @@
 package ifmo.mmmlpmsw.cloud
 
-import org.telegram.telegrambots.api.methods.send.SendMessage
-import org.telegram.telegrambots.api.objects.Update
 import org.telegram.telegrambots.bots.TelegramLongPollingBot
-import org.telegram.telegrambots.exceptions.TelegramApiException
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage
+import org.telegram.telegrambots.meta.api.objects.Update
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException
 
 
 class NeuralCatBot: TelegramLongPollingBot() {
@@ -17,15 +17,14 @@ class NeuralCatBot: TelegramLongPollingBot() {
 
     @Synchronized
     fun sendMsg(chatId: String?, s: String?) {
-        val sendMessage = SendMessage()
-        sendMessage.enableMarkdown(true)
-        sendMessage.chatId = chatId
-        sendMessage.text = "$s aaaaaaaaaa"
+        val message = SendMessage.builder().chatId(chatId!!).text("$s aaaaaaaaaa").build()
+        message.enableMarkdown(true)
         try {
-            sendMessage(sendMessage)
+            execute(message)
         } catch (e: TelegramApiException) {
             e.printStackTrace()
         }
+
     }
 
 }
