@@ -1,4 +1,4 @@
-package ifmo.mmmlpmsw.cloud
+package ifmo.mmmlpmsw.cloud.bot
 
 import org.telegram.telegrambots.meta.TelegramBotsApi
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException

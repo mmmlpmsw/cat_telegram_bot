@@ -1,4 +1,4 @@
-package ifmo.mmmlpmsw.cloud
+package ifmo.mmmlpmsw.cloud.bot
 
 import java.io.FileInputStream
 import java.util.Properties;
@@ -12,7 +12,7 @@ class CatBotProperties {
             try {
                 props.load(FileInputStream(PROPERTIES_FILE))
             } catch (e: NullPointerException) {
-                System.err.println("Settings file '${PROPERTIES_FILE}' not found")
+                System.err.println("Settings file '$PROPERTIES_FILE' not found")
             }
         }
 
