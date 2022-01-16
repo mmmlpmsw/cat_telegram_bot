@@ -5,12 +5,12 @@ import java.util.Properties;
 
 class CatBotProperties {
     companion object {
-        private val PROPERTIES_FILE = "src/main/resources/bot.properties"
+        private val PROPERTIES_FILE = "bot.properties"
         private var props: Properties = Properties()
 
         init {
             try {
-                props.load(FileInputStream(PROPERTIES_FILE))
+                props.load(this::class.java.classLoader.getResourceAsStream(PROPERTIES_FILE))
             } catch (e: NullPointerException) {
                 System.err.println("Settings file '$PROPERTIES_FILE' not found")
             }
