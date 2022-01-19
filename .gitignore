@@ -2,3 +2,6 @@
 .idea/
 target/
 venv/
+data/
+
+#https://github.com/simoninithomas/CatDCGAN/blob/master/Cat%20DCGAN.ipynb
