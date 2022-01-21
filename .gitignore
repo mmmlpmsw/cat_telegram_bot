@@ -3,5 +3,6 @@
 target/
 venv/
 data/
+.DS_Store
 
 #https://github.com/simoninithomas/CatDCGAN/blob/master/Cat%20DCGAN.ipynb
