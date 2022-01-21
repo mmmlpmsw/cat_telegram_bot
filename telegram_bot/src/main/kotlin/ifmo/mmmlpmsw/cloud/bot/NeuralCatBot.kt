@@ -15,6 +15,7 @@ import kotlin.collections.ArrayList
 class NeuralCatBot: TelegramLongPollingBot() {
 
     private val CACHETIME = 0
+    val URL = "https://app-catbot.azurewebsites.net"
     override fun getBotToken(): String = CatBotProperties.botToken
     override fun getBotUsername(): String = CatBotProperties.botUsername
     override fun onUpdateReceived(update: Update?) {
@@ -61,7 +62,7 @@ class NeuralCatBot: TelegramLongPollingBot() {
 
     private fun convertResults(text: String): List<InlineQueryResult> {
         val inlineQueryResults: MutableList<InlineQueryResult> = ArrayList()
-        val url = "https://davids-digital.space/server-1.0-SNAPSHOT?file=$text"
+        val url = "$URL?file=$text"
         inlineQueryResults.add(InlineQueryResultPhoto(
             UUID.randomUUID().toString(),
             url
