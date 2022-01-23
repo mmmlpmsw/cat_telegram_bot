@@ -1,0 +1,11 @@
+Flask
+emoji
+tweet-preprocessor
+kaggle
+transformers
+deep_translator
+keras
+numpy
+pandas
+sklearn
+tensorflow

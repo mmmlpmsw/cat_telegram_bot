@@ -3,18 +3,21 @@
 # !pip3 install tweet-preprocessor 2>/dev/null 1>/dev/null
 # !pip3 install kaggle
 # !pip3 install transformers
-# !pip3 install -U deep_translator
+# !pip3 install deep_translator
 
 import sys
-import preprocessor as p
-import numpy as np
-import pandas as pd
+
 import emoji
 import keras
-from sklearn.model_selection import train_test_split
-from keras.preprocessing import sequence, text
-from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+import numpy as np
+import pandas as pd
+import preprocessor as p
 from deep_translator import GoogleTranslator
+from keras.preprocessing import sequence, text
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+from flask import Flask
+
 
 data = pd.read_csv("text_emotion.csv")
 
@@ -138,14 +141,23 @@ def get_sentiment(model, text):
     return result[result.percentage == maximum]['sentiment'].values[0]  # todo remove comment to get one emotion
     # return result  todo remove comment to get all emotions list
 
-def main():
-    msg = ""
-    for i in range(1, len(sys.argv)):
-        msg = "" + sys.argv[i]
-    model1 = keras.models.load_model('train_model1.pb')
-    result = get_sentiment(model1, msg)
-    # print(result)
-    return result
 
-main()
-# print(result)
+# webapp
+
+app = Flask(__name__)
+model1 = keras.models.load_model('train_model1.pb')
+
+
+@app.route('/', methods=['GET'])
+def main():
+    from flask import request
+
+    msg = request.args.get('text')
+    if msg is None:
+        msg = ""
+
+    return get_sentiment(model1, msg)
+
+
+if __name__ == '__main__':
+    app.run()
