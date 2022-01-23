@@ -124,7 +124,12 @@ def translate(text):
 
 
 def get_sentiment(model, text):
-    text = translate(text)
+    if not isinstance(text, str):
+        return 'neutral'
+
+    if 0 < len(text) < 5000:
+        text = translate(text)
+
     text = clean_text(text)
     # tokenize
     twt = token.texts_to_sequences([text])
