@@ -67,9 +67,10 @@ class NeuralCatBot: TelegramLongPollingBot() {
         }
 
     private fun convertResults(text: String): List<InlineQueryResult> {
-        val url = "$URL/?text=${URLEncoder.encode(text, "utf-8")}"
+        val id = UUID.randomUUID().toString()
 
-        val image = InlineQueryResultPhoto(UUID.randomUUID().toString(), url)
+        val url = "$URL/?text=${URLEncoder.encode(text, "utf-8")}&id=$id"
+        val image = InlineQueryResultPhoto(id, url)
         image.thumbUrl = url
 
         return listOf(image)
