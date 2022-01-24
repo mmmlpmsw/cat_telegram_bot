@@ -1,0 +1,4 @@
+--prefer-binary
+Flask
+torch
+torchvision

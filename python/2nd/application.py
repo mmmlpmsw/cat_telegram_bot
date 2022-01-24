@@ -1,15 +1,12 @@
 #!/usr/bin/env python
 # coding: utf-8
-from __future__ import print_function
+
 
 import torch.nn as nn
-import torch.nn.parallel
-import torch.optim as optim
 import torch.utils.data
-import torchvision.utils as vutils
-import numpy as np
-import os
-import time
+import torchvision.transforms.functional as tvtf
+from flask import Flask
+
 
 manualSeed = 999
 # manualSeed = random.randint(1, 10000) # use if you want new results
@@ -111,68 +108,68 @@ class Discriminator(nn.Module):
 
 
 netD = Discriminator(ngpu).to(device)
-
 if (device.type == 'cuda') and (ngpu > 1):
     netD = nn.DataParallel(netD, list(range(ngpu)))
+
 netD.apply(weights_init)
 
-criterion = nn.BCELoss()
-fixed_noise = torch.randn(64, nz, 1, 1, device=device)
-real_label = 1.
-fake_label = 0.
-optimizerD = optim.Adam(netD.parameters(), lr=lr, betas=(beta1, 0.999))
-optimizerG = optim.Adam(netG.parameters(), lr=lr, betas=(beta1, 0.999))
 
-img_list = []
-G_losses = []
-D_losses = []
-iters = 0
+emotion_paths = {
+    'worry': 'models/worry_cats_generator.pb',
+    'anger': 'models/worry_cats_generator.pb',
+    'hate': 'models/worry_cats_generator.pb',
+    'empty': 'models/empty_cats_generator.pb',
+    'neutral': 'models/neutral_cats_generator.pb',
+    'relief': 'models/relief_cats_generator.pb',
+    'love': 'models/love_cats_generator.pb',
+    'happiness': 'models/love_cats_generator.pb',
+    'fun': 'models/love_cats_generator.pb',
+    'surprise': 'models/surprise_cats_generator.pb',
+    'enthusiasm': 'models/surprise_cats_generator.pb',
+    'sadness': 'models/sadness_cats_generator.pb',
+    'boredom': 'models/sadness_cats_generator.pb',
+}
 
-def tensor_to_image(tensor):
-    import PIL
-
-    tensor = tensor * 255
-    tensor = np.array(tensor, dtype=np.uint8)
-    if np.ndim(tensor) > 3:
-        assert tensor.shape[0] == 1
-        tensor = tensor[0]
-    return PIL.Image.fromarray(tensor)
-
-# os.mkdir('fake_cats')
-
-
-worry = 'models/worry_cats_generator.pb'
-empty = 'models/empty_cats_generator.pb'
-neutral = 'models/neutral_cats_generator.pb'
-relief = 'models/relief_cats_generator.pb'
-love = 'models/love_cats_generator.pb'
-surprise = 'models/surprise_cats_generator.pb'
-sadness = 'models/sadness_cats_generator.pb'
 
 def execute(emotion):
     global netG1
-    if emotion == "empty":
-        netG1 = torch.load(worry)
-    elif emotion == "neutral":
-        netG1 = torch.load(worry)
-    elif emotion == "relief":
-        netG1 = torch.load(worry)
-    elif emotion == "love" or emotion == "hapiness" or emotion == "fun":
-        netG1 = torch.load(worry)
-    elif emotion == "surprise" or emotion == "enthusiasm":
-        netG1 = torch.load(worry)
-    elif emotion == "sadness" or emotion == "boredom":
-        netG1 = torch.load(worry)
-    elif emotion == "worry" or emotion == "anger" or emotion == "hate":
-        netG1 = torch.load(worry)
+
+    netG1 = torch.load(emotion_paths[emotion])
 
     netG1.eval()
     fixed_noise = torch.randn(1, nz, 1, 1, device=device)
     fake = netG1(fixed_noise).detach().cpu()
+    fake = fake[0]
+
     fake_min, fake_max = fake.min(), fake.max()
     fake_minmax = fake_max - fake_min
-    fake1 = (fake - fake_min) / fake_minmax
-    img = vutils.make_grid(fake1, padding=2, normalize=True)
-    vutils.save_image(img, f'fake_cats/{time.time()}.png')
+    fake = (fake - fake_min) / fake_minmax
 
-execute("boredom")
+    return tvtf.to_pil_image(fake, mode='RGB')
+
+
+# webapp
+
+app = Flask(__name__)
+
+
+@app.route('/', methods=['GET'])
+def main():
+    from flask import request, send_file
+    from io import BytesIO
+
+    emotion = request.args.get('emotion')
+    if emotion is None or emotion not in emotion_paths:
+        emotion = 'neutral'
+
+    img = execute(emotion)
+
+    img_io = BytesIO()
+    img.save(img_io, 'PNG')
+    img_io.seek(0)
+
+    return send_file(img_io, mimetype='image/png')
+
+
+if __name__ == '__main__':
+    app.run()
