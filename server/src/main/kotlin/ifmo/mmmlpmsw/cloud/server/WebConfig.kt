@@ -7,6 +7,7 @@ import javax.servlet.ServletContext
 
 
 class WebConfig: AbstractAnnotationConfigDispatcherServletInitializer() {
+
     override fun onStartup(servletContext: ServletContext) {
         val applicationContext = AnnotationConfigWebApplicationContext()
         applicationContext.register(AppConfig::class.java)
