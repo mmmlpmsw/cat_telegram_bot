@@ -2,10 +2,12 @@ package ifmo.mmmlpmsw.cloud.bot
 
 import java.util.*
 
+
 class CatBotProperties {
+
     companion object {
-        private val PROPERTIES_FILE = "/bot.properties"
-        private var props: Properties = Properties()
+        private const val PROPERTIES_FILE = "/bot.properties"
+        private val props: Properties = Properties()
 
         init {
             try {
@@ -16,8 +18,6 @@ class CatBotProperties {
         }
 
         val botUsername: String = props.getProperty("bot_username")
-
         val botToken: String = props.getProperty("bot_token")
     }
-
 }

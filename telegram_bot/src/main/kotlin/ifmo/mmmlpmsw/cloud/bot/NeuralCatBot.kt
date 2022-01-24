@@ -8,21 +8,27 @@ import org.telegram.telegrambots.meta.api.objects.inlinequery.InlineQuery
 import org.telegram.telegrambots.meta.api.objects.inlinequery.result.InlineQueryResult
 import org.telegram.telegrambots.meta.api.objects.inlinequery.result.InlineQueryResultPhoto
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException
+import java.net.URLEncoder
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class NeuralCatBot: TelegramLongPollingBot() {
 
-    private val CACHETIME = 0
-    val URL = "https://app-catbot.azurewebsites.net"
+    companion object {
+
+        private const val CACHE_TIME = 0
+        private const val URL = "https://app-catbot.azurewebsites.net"
+    }
+
     override fun getBotToken(): String = CatBotProperties.botToken
     override fun getBotUsername(): String = CatBotProperties.botUsername
+
     override fun onUpdateReceived(update: Update?) {
 //        if (update?.message != null && update.message.text != null) {
 //            val message: String? = update.message.text
 //            sendMsg(update.message.chatId.toString(), message)
 //        }
+
         if (update!!.hasInlineQuery()) {
             processQuery(update.inlineQuery)
         }
@@ -32,44 +38,40 @@ class NeuralCatBot: TelegramLongPollingBot() {
     fun sendMsg(chatId: String?, s: String?) {
         val message = SendMessage.builder().chatId(chatId!!).text("$s aaaaaaaaaa").build()
         message.enableMarkdown(true)
+
         try {
             execute(message)
         } catch (e: TelegramApiException) {
             e.printStackTrace()
         }
 
+        // TODO add commands for /emotion and /cat
     }
 
     @Synchronized
     fun processQuery(inlineQuery: InlineQuery) {
-        val query = inlineQuery.query
         try {
-            if (query.isNotEmpty()) {
-                execute(converteResultsToResponse(inlineQuery))
+            if (inlineQuery.query.isNotEmpty()) {
+                execute(convertResultsToResponse(inlineQuery))
             }
         } catch (e: TelegramApiException) {
             e.printStackTrace()
         }
     }
 
-    private fun converteResultsToResponse(inlineQuery: InlineQuery): AnswerInlineQuery {
-        val answerInlineQuery = AnswerInlineQuery()
-        answerInlineQuery.inlineQueryId = inlineQuery.id
-        answerInlineQuery.cacheTime = CACHETIME
-        answerInlineQuery.results = convertResults(inlineQuery.query)
-        return answerInlineQuery
-    }
+    private fun convertResultsToResponse(inlineQuery: InlineQuery): AnswerInlineQuery =
+        AnswerInlineQuery().apply {
+            inlineQueryId = inlineQuery.id
+            results = convertResults(inlineQuery.query)
+            cacheTime = CACHE_TIME
+        }
 
     private fun convertResults(text: String): List<InlineQueryResult> {
-        val inlineQueryResults: MutableList<InlineQueryResult> = ArrayList()
-        val url = "$URL?file=$text"
-        inlineQueryResults.add(InlineQueryResultPhoto(
-            UUID.randomUUID().toString(),
-            url
-        ).also {
-            it.thumbUrl = url
-        })
-        return inlineQueryResults
-    }
+        val url = "$URL/?text=${URLEncoder.encode(text, "utf-8")}"
 
+        val image = InlineQueryResultPhoto(UUID.randomUUID().toString(), url)
+        image.thumbUrl = url
+
+        return listOf(image)
+    }
 }

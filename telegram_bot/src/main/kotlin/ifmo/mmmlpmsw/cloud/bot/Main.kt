@@ -6,9 +6,8 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession
 
 
 fun main() {
-    val telegramBotsApi = TelegramBotsApi(DefaultBotSession::class.java)
     try {
-        telegramBotsApi.registerBot(NeuralCatBot())
+        TelegramBotsApi(DefaultBotSession::class.java).registerBot(NeuralCatBot())
     } catch (e: TelegramApiRequestException) {
         e.printStackTrace()
     }
