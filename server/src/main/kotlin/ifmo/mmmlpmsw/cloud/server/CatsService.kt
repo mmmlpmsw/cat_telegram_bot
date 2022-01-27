@@ -10,7 +10,7 @@ class CatsService {
 
     companion object {
 
-        private const val SERVER_URL = "https://neurocats.azurewebsites.net/?emotion={emotion}"
+        private const val SERVER_URL = "https://cats-python-pictures.azurewebsites.net/?emotion={emotion}"
     }
 
     fun getCatForEmotion(emotion: Emotion): Resource? = try {

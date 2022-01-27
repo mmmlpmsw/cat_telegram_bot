@@ -9,7 +9,7 @@ class EmotionsService {
 
     companion object {
 
-        private const val SERVER_URL = "https://emotions-server.azurewebsites.net/?text={text}"
+        private const val SERVER_URL = "https://cats-python-emotions.azurewebsites.net/?text={text}"
     }
 
     fun getEmotionOfText(text: String): Emotion? = try {

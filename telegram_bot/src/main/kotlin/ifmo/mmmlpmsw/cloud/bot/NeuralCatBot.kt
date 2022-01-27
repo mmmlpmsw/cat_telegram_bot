@@ -17,7 +17,7 @@ class NeuralCatBot: TelegramLongPollingBot() {
     companion object {
 
         private const val CACHE_TIME = 0
-        private const val URL = "https://app-catbot.azurewebsites.net"
+        private const val URL = "https://cats-spring-server.azurewebsites.net"
     }
 
     override fun getBotToken(): String = CatBotProperties.botToken
