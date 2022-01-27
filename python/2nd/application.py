@@ -52,16 +52,16 @@ emotion_paths = {
     'worry': 'models/worry_cats_generator.pb',
     'anger': 'models/worry_cats_generator.pb',
     'hate': 'models/worry_cats_generator.pb',
-    # 'empty': 'models/empty_cats_generator.pb',
+    'empty': 'models/empty_cats_generator.pb',
     'neutral': 'models/neutral_cats_generator.pb',
-    # 'relief': 'models/relief_cats_generator.pb',
+    'relief': 'models/relief_cats_generator.pb',
     # 'love': 'models/love_cats_generator.pb',
     # 'happiness': 'models/love_cats_generator.pb',
     # 'fun': 'models/love_cats_generator.pb',
-    # 'surprise': 'models/surprise_cats_generator.pb',
-    # 'enthusiasm': 'models/surprise_cats_generator.pb',
-    # 'sadness': 'models/sadness_cats_generator.pb',
-    # 'boredom': 'models/sadness_cats_generator.pb',
+    'surprise': 'models/surprise_cats_generator.pb',
+    'enthusiasm': 'models/surprise_cats_generator.pb',
+    'sadness': 'models/sadness_cats_generator.pb',
+    'boredom': 'models/sadness_cats_generator.pb',
 }
 
 
