@@ -70,8 +70,10 @@ emotion_generators = {}
 
 def init_generators():
     for emotion, path in emotion_paths.items():
+        print(f'Loading model \'{path}\'')
+
         netG = Generator(ngpu).to(device)
-        netG.load_state_dict(torch.load(path))
+        netG.load_state_dict(torch.load(path, map_location=device))
         netG.eval()
 
         emotion_generators[emotion] = netG
